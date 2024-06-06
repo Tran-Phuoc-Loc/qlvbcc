@@ -1,13 +1,20 @@
 <?php
+// Khai báo các lỗi PHP
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
 require_once 'db.php';
-echo "Đã tải tệp db.php<br>";
+session_start();
 
 if (isset($_GET['code'])) {
     $verification_code = $_GET['code'];
 
+    // Xóa các mã xác minh đã hết hạn (quá 5 phút)
+    $stmt = $conn->prepare("DELETE FROM email_verification WHERE created_at < NOW() - INTERVAL 5 MINUTE");
+    $stmt->execute();
+
+    // Kiểm tra mã xác minh trong cơ sở dữ liệu
     $stmt = $conn->prepare("SELECT email FROM email_verification WHERE verification_code = :verification_code");
     $stmt->bindParam(':verification_code', $verification_code);
     $stmt->execute();
@@ -16,48 +23,17 @@ if (isset($_GET['code'])) {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $email = $row['email'];
 
-        // Xóa mã xác minh khỏi cơ sở dữ liệu sau khi xác minh thành công
-        $stmt = $conn->prepare("DELETE FROM email_verification WHERE verification_code = :verification_code");
-        $stmt->bindParam(':verification_code', $verification_code);
-        $stmt->execute();
+        // Lưu email và mã xác minh vào session để sử dụng sau
+        $_SESSION['email'] = $email;
+        $_SESSION['verification_code'] = $verification_code;
 
-        // Hiển thị thông tin chứng chỉ
-        $stmt = $conn->prepare("SELECT * FROM certificates WHERE certificate_number = :certificate_number");
-        $stmt->bindParam(':certificate_number', $_GET['certificate_number']);
-        $stmt->execute();
-
-        if ($stmt->rowCount() > 0) {
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            echo '<div style="text-align: center;">';
-            echo "<h1>Thông tin chứng chỉ</h1>";
-            echo "Mã số chứng chỉ: " . htmlspecialchars($row['certificate_number']) . "<br>";
-            echo "Họ tên: " . htmlspecialchars($row['full_name']) . "<br>";
-            echo "Năm sinh: " . htmlspecialchars($row['birth_year']) . "<br>";
-            echo "Giới tính: " . htmlspecialchars($row['gender']) . "<br>";
-            echo "Nghề đào tạo: " . htmlspecialchars($row['training_course']) . "<br>";
-            echo "Thời gian học: " . htmlspecialchars($row['start_date']) . " đến " . htmlspecialchars($row['end_date']) . "<br>";
-            echo "Ngày cấp: " . htmlspecialchars($row['issue_date']) . "<br>";
-
-            echo '<form action="lookup.php" method="POST">';
-            echo '<input type="hidden" name="certificate_number" value="' . htmlspecialchars($row['certificate_number']) . '">';
-            echo '<button type="submit" name="create_copy" value="1">Tạo bản sao chứng chỉ</button>';
-            echo '</form>';
-            echo '</div>';
-
-            if (isset($_POST['create_copy'])) {
-                echo '<div style="text-align: center; margin-top: 20px;">';
-                echo "<h2>Ảnh toàn bộ chứng chỉ</h2>";
-                echo "<img src='data:image/jpeg;base64," . base64_encode($row['CertificatePicture']) . "' width='800'/>";
-                echo '</div>';
-            }
-        } else {
-            echo "Không tìm thấy chứng chỉ với email này.";
-        }
+        // Chuyển hướng đến trang nhập mã xác minh
+        header('Location: enter_code.php');
+        exit();
     } else {
-        echo "Mã xác minh không hợp lệ.";
+        echo "Mã xác minh không hợp lệ hoặc đã hết hạn.";
     }
 } else {
-    echo "Không nhận được mã xác minh.";
+    echo "Yêu cầu không hợp lệ.";
 }
 ?>
