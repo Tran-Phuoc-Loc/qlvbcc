@@ -32,6 +32,12 @@ CREATE TABLE email_verification (
     email VARCHAR(100) NOT NULL,
     verification_code VARCHAR(255) NOT NULL
 );
+-- tạo bảng gmail
+CREATE TABLE gmail_accounts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
 
 
 INSERT INTO certificates (certificate_number, full_name, birth_year, gender, training_course, start_date, end_date, issue_date)
@@ -39,6 +45,8 @@ VALUES ('NTU-00001-TT34', 'Nguyễn Văn A', 1990, 'Nam', 'Kỹ năng Công ngh�
 
 INSERT INTO information (student_name, issuing_institution, address, email, email_verified, issue_date)
 VALUES ('Nguyễn Văn A', 'CTy Nhã Thành UNIVERSE', 'Phường Xuân Khánh, Quận Ninh Kiều, TP Cần Thơ', 'honkaiimpact968@gmail.com', FALSE, '2024-07-15');
+
+INSERT INTO gmail_accounts (`id`, `email`, `password`) VALUES ('1', 'hokaiimpact968@gmail.com', 'honkai290722');
 
 UPDATE information SET email_verified = TRUE WHERE email = 'honkaiimpact968@gmail.com' LIMIT 1;
 

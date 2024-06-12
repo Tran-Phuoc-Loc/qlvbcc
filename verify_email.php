@@ -13,9 +13,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $issuing_institution = $_POST['issuing_institution'];
     $address = $_POST['address'];
     $email = $_POST['email'];
-        // Đường dẫn tới hình ảnh
-        $imagePath = 'C:/xampp/htdocs/qlvbcc/image/cc.jpg';
 
+    // Đường dẫn tới hình ảnh
+    $imagePath = 'C:/xampp/htdocs/qlvbcc/image/cc.jpg';
+
+    // // Kiểm tra xem email có được liên kết với chứng chỉ khác không
+    // $stmt = $conn->prepare("SELECT * FROM certificates WHERE email = :email");
+    // $stmt->bindParam(':email', $email);
+    // $stmt->execute();
+
+    // if ($stmt->rowCount() > 0) {
+    //     echo "Email này đã được liên kết với chứng chỉ khác. Vui lòng sử dụng email khác.";
+    //     exit();
+    // }
 
     // Đọc nội dung tệp ảnh
     $imageData = file_get_contents($imagePath);
@@ -58,35 +68,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $subject = "Xác minh địa chỉ email";
     $message = "Nhấn vào đường dẫn sau để xác minh địa chỉ email của bạn: " . $verification_link;
 
-    // Sử dụng PHPMailer để gửi email
-    $mail = new PHPMailer\PHPMailer\PHPMailer();
-    try {
-        //Server settings
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'honkaiimpact968@gmail.com'; // Thay thế bằng email của bạn
-        $mail->Password = 'honkai290722'; // Thay thế bằng mật khẩu email của bạn
-        $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
+    // Truy vấn một tài khoản Gmail đã đăng ký
+    $stmt = $conn->prepare("SELECT * FROM gmail_accounts LIMIT 1");
+    $stmt->execute();
+    $gmailAccount = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        //Recipients
-        $mail->setFrom('honkaiimpact968@gmail.com', 'Mailer');
-        $mail->addAddress($email);
+    if ($gmailAccount) {
+        $gmailEmail = $gmailAccount['email'];
+        $gmailPassword = $gmailAccount['password'];
 
-        //Content
-        $mail->isHTML(true);
-        $mail->Subject = $subject;
-        $mail->Body    = $message;
+        // Tạo đường dẫn xác minh
+        $verification_link = "http://localhost/qlvbcc/verify.php?code=" . $verification_code . "&email=" . urlencode($email);
 
-        $mail->send();
-        echo 'Một email xác minh đã được gửi đến địa chỉ email của bạn.';
+        // Chuẩn bị email
+        $subject = "Xác minh địa chỉ email";
+        $message = "Nhấn vào đường dẫn sau để xác minh địa chỉ email của bạn: " . $verification_link;
 
-        // Chuyển hướng người dùng đến trang nhập mã xác minh
-        header('Location: enter_code.php?email=' . urlencode($email));
-        exit();
-    } catch (Exception $e) {
-        echo "Không thể gửi email xác minh. Vui lòng thử lại sau. Mailer Error: {$mail->ErrorInfo}";
+        // Sử dụng PHPMailer để gửi email
+        $mail = new PHPMailer\PHPMailer\PHPMailer();
+        try {
+            //Cài đặt Server
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = $gmailEmail; // Sử dụng email được lấy từ cơ sở dữ liệu
+            $mail->Password = $gmailPassword; // Sử dụng mật khẩu được lấy từ cơ sở dữ liệu
+            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+
+            //Người nhận
+            $mail->setFrom($gmailEmail, 'Mailer');
+            $mail->addAddress($email);
+
+            //Nội dung
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            $mail->Body    = $message;
+
+            $mail->send();
+            echo 'Một email xác minh đã được gửi đến địa chỉ email của bạn.';
+
+            // Chuyển hướng người dùng đến trang nhập mã xác minh
+            header('Location: enter_code.php?email=' . urlencode($email));
+            exit();
+        } catch (Exception $e) {
+            echo "Không thể gửi email xác minh. Vui lòng thử lại sau. Mailer Error: {$mail->ErrorInfo}";
+        }
+    } else {
+        echo "Không tìm thấy tài khoản Gmail để gửi email.";
     }
 }
 ?>
