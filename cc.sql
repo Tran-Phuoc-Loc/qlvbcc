@@ -46,7 +46,7 @@ VALUES ('NTU-00001-TT34', 'Nguyễn Văn A', 1990, 'Nam', 'Kỹ năng Công ngh�
 INSERT INTO information (student_name, issuing_institution, address, email, email_verified, issue_date)
 VALUES ('Nguyễn Văn A', 'CTy Nhã Thành UNIVERSE', 'Phường Xuân Khánh, Quận Ninh Kiều, TP Cần Thơ', 'honkaiimpact968@gmail.com', FALSE, '2024-07-15');
 
-INSERT INTO gmail_accounts (`id`, `email`, `password`) VALUES ('1', 'hokaiimpact968@gmail.com', 'honkai290722');
+INSERT INTO gmail_accounts (`id`, `email`, `password`) VALUES ('1', 'hokaiimpact968@gmail.com', '');
 
 UPDATE information SET email_verified = TRUE WHERE email = 'honkaiimpact968@gmail.com' LIMIT 1;
 
@@ -56,6 +56,7 @@ ALTER TABLE certificates ADD COLUMN email VARCHAR(255) NOT NULL;
 
 UPDATE certificates SET email = 'honkaiimpact968@gmail.com' WHERE id = 1;
 
+-- thêm ảnh 
 UPDATE certificates
 SET CertificatePicture = LOAD_FILE('C:/xampp/htdocs/qlvbcc/image/cc.jpg')
 WHERE id = 1;
