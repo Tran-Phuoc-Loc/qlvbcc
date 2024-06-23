@@ -55,6 +55,8 @@ ALTER TABLE email_verification ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_T
 ALTER TABLE certificates ADD COLUMN email VARCHAR(255) NOT NULL;
 
 UPDATE certificates SET email = 'honkaiimpact968@gmail.com' WHERE id = 1;
+UPDATE `cc`.`certificates` SET `email` = 'ttp6889@gmail.com' WHERE (`id` = '1');
+
 
 -- thêm ảnh 
 UPDATE certificates
