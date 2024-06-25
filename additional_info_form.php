@@ -23,7 +23,7 @@
                 document.getElementById("buttonDiv"),
                 { theme: "outline", size: "large" }  // tùy chỉnh thuộc tính
             );
-            google.accounts.id.prompt(); // hiển thị hộp thoại
+            // google.accounts.id.prompt(); // hiển thị hộp thoại
         }
     </script>
 </head>
@@ -35,7 +35,7 @@
         <input type="hidden" name="email" value="<?php echo htmlspecialchars($_GET['email']); ?>">
         <div id="buttonDiv"></div>
         <input type="hidden" id="google_token" name="google_token">
-        <button type="submit">Tra cứu</button>
+        <!-- <button type="submit">Tra cứu</button> -->
     </form>
 </body>
 </html>

@@ -14,6 +14,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $student_name = $_POST['student_name'];
     $issuing_institution = $_POST['issuing_institution'];
     $address = $_POST['address'];
+    // $email = isset($_POST['email']) ? $_POST['email'] : null;
+    // $certificate_number = isset($_POST['certificate_number']) ? $_POST['certificate_number'] : null;
+    // if ($email && $certificate_number) {
+    //     $stmt = $conn->prepare("SELECT * FROM cartificates WHERE email = :email AND certificate_number = :certificate_number");
+    //     $stmt->bindParam(':email', $email);
+    //     $stmt->bindParam(':carteficate_number', $certificate_number);
+    //     $stmt->execute();
+
+    //     if($stmt->rowCount() > 0) {
+    //         $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    //     } else {
+    //         echo "Không tìm thấy số chứng chỉ này";
+    //         exit;
+    //     }
+
+    // }
 
     // Lưu thông tin vào session
     $_SESSION['student_name'] = $student_name;
@@ -31,6 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     header('Location: ' . filter_var($authUrl, FILTER_SANITIZE_URL));
     exit();
 }
+
 ?>
 
 // // Bật hiển thị lỗi để dễ dàng debug
