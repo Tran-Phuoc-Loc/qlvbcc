@@ -77,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // print_r($row);
                     // echo '</pre>';
                 } else {
-                    echo "Không tìm thấy số chứng chỉ với email này ";
+                    echo "Không tìm thấy số chứng chỉ với email này.<br> ";
                     echo "Xin vui lòng liên hệ người quản trị qua email này.";
                     exit;
                 }
