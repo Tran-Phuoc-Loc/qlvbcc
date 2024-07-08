@@ -16,4 +16,4 @@
 </body>
 </html>
 <?php
-$stmt-$conn->papare(select information from student_name, email
+$stmt-$conn->papare(select * from information
