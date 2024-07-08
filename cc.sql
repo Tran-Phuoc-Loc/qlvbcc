@@ -29,11 +29,12 @@ CREATE TABLE information (
 );
 
 INSERT INTO certificates (certificate_number, full_name, birth_year, gender, training_course, start_date, end_date, issue_date)
-VALUES ('NTU-00001-TT34', 'Nguyễn Văn A', 1990, 'Nam', 'Kỹ năng Công nghệ thông tin', '2024-03-12', '2024-05-05', '2024-07-15');
+VALUES ('NTU-00001-TT34', 'Nguyễn Văn A', 1990, 'Nam', 'Kỹ năng Công nghệ tiếp
+-- INSERT INTO information (student_name, issuing_institution, address, email, email_verified, issue_date)
+-- VALUES ('Nguyễn Văn A', 'CTy Nhã Thành UNIVERSE', 'Phường Xuân Khánh, Quận Ninh Kiều, TP Cần Thơ', 'honkaiimpact968@gmail.com', FALSE, '2024-07-15');
 
-INSERT INTO information (student_name, issuing_institution, address, email, email_verified, issue_date)
-VALUES ('Nguyễn Văn A', 'CTy Nhã Thành UNIVERSE', 'Phường Xuân Khánh, Quận Ninh Kiều, TP Cần Thơ', 'honkaiimpact968@gmail.com', FALSE, '2024-07-15');
-
+-- INSERT INTO information (student_name, issuing_institution, address, phone, email, issue_date)
+--     VALUES ('Nguyễn Văn A','CTy Nhã Thành UNIVERSE','Phường Xuân Khánh, Quận Ninh Kiều, TP Cần Thơ','','ttp6889@gmail.com','');
 
 -- UPDATE information SET email_verified = TRUE WHERE email = 'honkaiimpact968@gmail.com' LIMIT 1;
 
