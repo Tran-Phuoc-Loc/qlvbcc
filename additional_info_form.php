@@ -121,7 +121,7 @@
         <input type="hidden" name="email" value="<?php echo htmlspecialchars($_GET['email']); ?>">
         <div id="buttonDiv"></div>
         <input type="hidden" id="google_token" name="google_token">
-        <!-- <button type="submit">Tra cứu</button> -->
+
     </form>
 </body>
 </html>
