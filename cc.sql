@@ -23,7 +23,7 @@ CREATE TABLE information (
     student_name VARCHAR(100) NOT NULL,
     issuing_institution VARCHAR(100) NOT NULL,
     address VARCHAR(255) NOT NULL,
-    phone NUMBER(10) NOT NULL,
+    -- phone VARCHAR(10) NOT NULL,
     email VARCHAR(100) NOT NULL,
     issue_date DATE
 );
