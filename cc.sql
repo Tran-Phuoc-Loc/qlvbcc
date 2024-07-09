@@ -6,7 +6,7 @@ USE cc;
 CREATE TABLE certificates (
     id INT AUTO_INCREMENT PRIMARY KEY,
     certificate_number VARCHAR(15) NOT NULL,
-    email VARCHAR(255) NOT NULL,
+    -- email VARCHAR(255) NOT NULL,
     full_name VARCHAR(100) NOT NULL,
     birth_year INT NOT NULL,
     gender VARCHAR(10) NOT NULL,
