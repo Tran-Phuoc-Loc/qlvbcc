@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $student_name = $_POST['student_name'];
     $issuing_institution = $_POST['issuing_institution'];
     $address = $_POST['address'];
-    $phone = $_POST['phone'];
+    // $phone = $_POST['phone'];
     // $email = isset($_POST['email']) ? $_POST['email'] : null;
     // $certificate_number = isset($_POST['certificate_number']) ? $_POST['certificate_number'] : null;
     // if ($email && $certificate_number) {
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION['student_name'] = $student_name;
     $_SESSION['issuing_institution'] = $issuing_institution;
     $_SESSION['address'] = $address;
-    $_SESSION['phone'] = $phone;
+    // $_SESSION['phone'] = $phone;
     $client = new Google_Client();
     $client->setClientId('199805261899-aavu0vckkke7f4mr6f0589mo392hbrp4.apps.googleusercontent.com');
     $client->setClientSecret('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');
