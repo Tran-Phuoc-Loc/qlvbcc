@@ -90,6 +90,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <title>Thông tin chứng chỉ</title>
                         <style>
                             body {
+                                font-family: Arial, sans-serif;
+                                margin: 0;
+                                padding: 0;
+                                background: linear-gradient(120deg, #c33764 0%, #1d2671 100%);
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                height: 100vh;
+                            }
+                            .container {
+                                background: rgba(255, 255, 255, 0.9);
+                                padding: 20px;
+                                border-radius: 8px;
+                               box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                                width: 90%;
+                                max-width: 600px;
+                                text-align: center;
+                            }
+                            h1 {
+                                color: #333;
+                                margin-bottom: 20px;
+                            }
+                            .info {
+                                border-top: 1px solid #ccc;
+                                padding-top: 20px;
+                            }
+                            .info p {
+                                margin: 10px 0;
+                                font-size: 16px;
+                                line-height: 1.6;
+                            }
+                            .form-container {
+                                margin-top: 20px;
+                            }
+                            .form-container button {
+                                padding: 10px 20px;
+                                background-color: #4CAF50;
+                                color: #fff;
+                                border: none;
+                                cursor: pointer;
+                                border-radius: 4px;
+                                font-size: 16px;
+                                transition: background-color 0.3s ease;
+                            }
+                            .form-container button:hover {
+                                background-color: #45a049;
+                            }
+                            body {
                                 -webkit-user-select: none; /* Chặn lựa chọn trên WebKit (Chrome, Safari) */
                                 -moz-user-select: none; /* Chặn lựa chọn trên Firefox */
                                 -ms-user-select: none; /* Chặn lựa chọn trên IE/Edge */
@@ -135,7 +183,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </script>
                     </head>
                     <body>
-                        <div style="text-align: center;">
+                        <div class= "container">
                             <h1>Thông tin chứng chỉ</h1>
                             <p>Mã số chứng chỉ: ' . htmlspecialchars($row['certificate_number']) . '</p>
                             <p>Họ tên: ' . htmlspecialchars($row['full_name']) . '</p>
@@ -144,12 +192,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <p>Nghề đào tạo: ' . htmlspecialchars($row['training_course']) . '</p>
                             <p>Thời gian học: ' . htmlspecialchars($row['start_date']) . ' đến ' . htmlspecialchars($row['end_date']) . '</p>
                             <p>Ngày cấp: ' . htmlspecialchars($row['issue_date']) . '</p>
-                            <form action="lookup.php" method="POST">
-                                <input type="hidden" name="certificate_number" value="' . htmlspecialchars($row['certificate_number']) . '">
-                                <input type="hidden" name="create_copy" value="1">
-                                <input type="hidden" name="email" value="' . htmlspecialchars($row['email']) . '">
-                                <button type="submit">Tạo bản sao chứng chỉ</button>
-                            </form>
+                            <div class="form-container">
+                                <form action="lookup.php" method="POST">
+                                    <input type="hidden" name="certificate_number" value="' . htmlspecialchars($row['certificate_number']) . '">
+                                    <input type="hidden" name="create_copy" value="1">
+                                    <input type="hidden" name="email" value="' . htmlspecialchars($row['email']) . '">
+                                    <button type="submit">Tạo bản sao chứng chỉ</button>
+                                </form>
+                            </div>
                         </div>';
                 // echo '<div style="text-align: center;">';
                 // echo "<h1>Thông tin chứng chỉ</h1>";
@@ -190,7 +240,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             echo "Dữ liệu không hợp lệ.";
         }
-    } 
+    }
     // else {
     //     echo "Google token không hợp lệ";
     // }
@@ -234,7 +284,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </script> ';
             echo '<div style="text-align: center; margin-top: 20px;">';
             echo "<h2>Ảnh toàn bộ chứng chỉ</h2>";
-            echo "<img src='data:image/jpeg;base64," . $row['CertificatePicture'] . "' width='800'/><br>";
+            // sử dụng 1 trong 2 cái này để có ảnh
+            // echo "<img src='data:image/jpeg;base64," . $row['CertificatePicture'] . "' width='800'/><br>";
+            echo '<img src="data:image/jpeg;base64,' . base64_encode($row['CertificatePicture']) . '" width="800"/>';
             echo '</div>';
         } else {
             echo "Không tìm thấy chứng chỉ.";
@@ -242,7 +294,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 } else {
     // echo "Không có Google token";
-    
-} 
 
-
+}
