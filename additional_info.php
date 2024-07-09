@@ -6,7 +6,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 session_start();
 
-require_once 'vendor/autoload.php'; // Đường dẫn đến autoload.php được tạo bởi Composer
+require_once 'vendor/autoload.php'; // Đường dẫn đến autoload.php 
 require_once 'db.php'; // Tệp kết nối cơ sở dữ liệu của bạn
 
 
