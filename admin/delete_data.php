@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
         $stmt->execute([$delete_id]);
 
         // Xóa ảnh nếu tồn tại
-        if ($certificate && file_exists($certificate['CertificatePicture'])) {
+        if ($certificate && !empty($certificate['CertificatePicture']) && file_exists($certificate['CertificatePicture'])) {
             unlink($certificate['CertificatePicture']);
         }
 
@@ -152,7 +152,7 @@ try {
             </tbody>
         </table>
         <div class="footer">
-            &copy; <?php echo date("Y"); ?> Xóa Dữ liệu . All rights reserved.
+            &copy; <?php echo date("Y"); ?> Xóa Dữ liệu. All rights reserved.
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>

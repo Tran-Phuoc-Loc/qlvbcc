@@ -6,7 +6,8 @@ error_reporting(E_ALL);
 
 require_once '../db.php'; // Điều chỉnh đường dẫn tới tệp db.php
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+// Xử lý khi nhấn nút Thêm
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $certificate_number = $_POST['certificate_number'];
     $full_name = $_POST['full_name'];
     $birth_year = $_POST['birth_year'];
@@ -16,42 +17,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $end_date = $_POST['end_date'];
     $issue_date = $_POST['issue_date'];
     $email = $_POST['email'];
-    $certificate_picture_path = null;
 
-    // Kiểm tra nếu tệp được tải lên
-    if (!empty($_FILES['certificate_picture']['tmp_name'])) {
-        $target_dir = "image/";
-        $target_file = $target_dir . basename($_FILES["certificate_picture"]["name"]);
-        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-
-        // Kiểm tra nếu tệp là ảnh hợp lệ
-        $check = getimagesize($_FILES["certificate_picture"]["tmp_name"]);
-        if($check !== false) {
-            if (move_uploaded_file($_FILES["certificate_picture"]["tmp_name"], $target_file)) {
-                $certificate_picture_path = $target_file;
-            } else {
-                $error_message = "Lỗi khi tải lên ảnh.";
-            }
-        } else {
-            $error_message = "Tệp không phải là ảnh.";
-        }
-    }
-
-    // Kiểm tra dữ liệu nhập vào
-    if (!empty($certificate_number) && !empty($full_name) && !empty($birth_year) && !empty($gender) && !empty($training_course) && !empty($start_date) && !empty($end_date) && !empty($issue_date) && !empty($email)) {
-        // Chuẩn bị câu lệnh SQL để chèn dữ liệu
-        $stmt = $conn->prepare("INSERT INTO certificates (certificate_number, full_name, birth_year, gender, training_course, start_date, end_date, issue_date, CertificatePicture, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$certificate_number, $full_name, $birth_year, $gender, $training_course, $start_date, $end_date, $issue_date, $certificate_picture_path, $email]);
-
-        if ($stmt) {
-            $success_message = "Dữ liệu đã được chèn thành công!";
-        } else {
-            $error_message = "Lỗi khi chèn dữ liệu!";
-        }
-    } else {
-        $error_message = "Vui lòng điền đầy đủ thông tin!";
+    // Thêm dữ liệu vào cơ sở dữ liệu
+    try {
+        $stmt = $conn->prepare("INSERT INTO certificates (certificate_number, full_name, birth_year, gender, training_course, start_date, end_date, issue_date, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$certificate_number, $full_name, $birth_year, $gender, $training_course, $start_date, $end_date, $issue_date, $email]);
+        $success_message = "Dữ liệu đã được thêm thành công!";
+    } catch (Exception $e) {
+        $error_message = "Lỗi khi thêm dữ liệu: " . $e->getMessage();
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -66,15 +42,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         body {
             background-color: #f8f9fa;
         }
+
         .container {
             background-color: white;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         h1 {
             color: #343a40;
         }
+
         .footer {
             text-align: center;
             margin-top: 20px;
@@ -84,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <a class="navbar-brand" href="index_admin.php">Quản lý Thông tin</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -107,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </nav>
     <div class="container mt-5">
-        <h1 class="text-center">Thêm Dữ liệu vào Cơ sở Dữ liệu</h1>
+        <h1 class="text-center">Chèn Dữ liệu vào Cơ sở Dữ liệu</h1>
         <?php
         if (!empty($success_message)) {
             echo '<div class="alert alert-success">' . $success_message . '</div>';
@@ -116,51 +95,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo '<div class="alert alert-danger">' . $error_message . '</div>';
         }
         ?>
-        <form method="post" action="" enctype="multipart/form-data">
+        <form method="post">
             <div class="form-group">
-                <label for="certificate_number">Số chứng chỉ</label>
-                <input type="text" class="form-control" id="certificate_number" name="certificate_number" required>
+                <label>Số chứng chỉ:</label>
+                <input type="text" name="certificate_number" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="full_name">Họ và tên</label>
-                <input type="text" class="form-control" id="full_name" name="full_name" required>
+                <label>Họ và tên:</label>
+                <input type="text" name="full_name" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="birth_year">Năm sinh</label>
-                <input type="number" class="form-control" id="birth_year" name="birth_year" required>
+                <label>Năm sinh:</label>
+                <input type="text" name="birth_year" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="gender">Giới tính</label>
-                <input type="text" class="form-control" id="gender" name="gender" required>
+                <label>Giới tính:</label>
+                <select name="gender" class="form-control" required>
+                    <option value="Nam">Nam</option>
+                    <option value="Nữ">Nữ</option>
+                </select>
             </div>
             <div class="form-group">
-                <label for="training_course">Khóa đào tạo</label>
-                <input type="text" class="form-control" id="training_course" name="training_course" required>
+                <label>Khóa đào tạo:</label>
+                <input type="text" name="training_course" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="start_date">Ngày bắt đầu</label>
-                <input type="date" class="form-control" id="start_date" name="start_date" required>
+                <label>Ngày bắt đầu:</label>
+                <input type="date" name="start_date" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="end_date">Ngày kết thúc</label>
-                <input type="date" class="form-control" id="end_date" name="end_date" required>
+                <label>Ngày kết thúc:</label>
+                <input type="date" name="end_date" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="issue_date">Ngày cấp</label>
-                <input type="text" class="form-control" id="issue_date" name="issue_date" required>
+                <label>Ngày cấp:</label>
+                <input type="text" name="issue_date" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="certificate_picture">Ảnh chứng chỉ</label>
-                <input type="file" class="form-control" id="certificate_picture" name="certificate_picture">
+                <label>Email:</label>
+                <input type="email" name="email" class="form-control" required>
             </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" name="email" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Thêm dữ liệu</button>
+            <button type="submit" name="submit" class="btn btn-primary">Thêm</button>
         </form>
         <div class="footer">
-            &copy; <?php echo date("Y"); ?> Thêm Dữ liệu vào Cơ sở Dữ liệu. All rights reserved.
+            &copy; <?php echo date("Y"); ?> Chèn Dữ liệu vào Cơ sở Dữ liệu. All rights reserved.
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
