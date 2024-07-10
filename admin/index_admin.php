@@ -13,6 +13,7 @@
             min-height: 100vh;
             margin: 0;
         }
+
         .navbar {
             background-color: #007bff;
             color: white;
@@ -26,6 +27,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
         .navbar-brand {
             color: white;
             font-size: 1.5rem;
@@ -36,15 +38,18 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+
         .navbar-nav {
             width: 100%;
             list-style-type: none;
             padding: 0;
             margin: 0;
         }
+
         .nav-item {
             margin-bottom: 10px;
         }
+
         .nav-link {
             color: white;
             text-decoration: none;
@@ -56,13 +61,16 @@
             word-wrap: break-word;
             max-width: 100%;
         }
+
         .nav-link:hover {
             background-color: #8470FF;
         }
+
         .content {
             flex-grow: 1;
             padding: 30px;
         }
+
         .container {
             background-color: white;
             padding: 30px;
@@ -70,6 +78,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
         }
+
         .footer {
             text-align: center;
             margin-top: 20px;
@@ -87,6 +96,12 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="report.php">Báo cáo Số lượng</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="insert_data.php">Chèn Dữ liệu</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="delete_data.php">Xóa Dữ liệu</a>
             </li>
         </ul>
     </nav>

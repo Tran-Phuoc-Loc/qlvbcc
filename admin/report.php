@@ -10,8 +10,12 @@ require_once '../db.php'; // Điều chỉnh đường dẫn tới tệp db.php
 try {
     $count_stmt = $conn->query("SELECT COUNT(*) FROM information");
     $total_rows = $count_stmt->fetchColumn();
+
+    // Lấy thông tin chứng chỉ và đếm số lượng email, tên và số điện thoại giống nhau
+    $info_stmt = $conn->query("SELECT student_name, email, phone, COUNT(*) as count FROM information GROUP BY student_name, email, phone ORDER BY student_name, email, phone");
+    $infos = $info_stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
-    echo '<span style="color:#FF0400">Lỗi khi đếm số lượng hàng: ' . $e->getMessage() . '</span>';
+    echo '<span style="color:#FF0400">Lỗi khi lấy dữ liệu: ' . $e->getMessage() . '</span>';
     exit();
 }
 ?>
@@ -42,6 +46,13 @@ try {
             margin-top: 20px;
             color: #6c757d;
         }
+        th {
+            cursor: pointer;
+        }
+        th.sortable:after {
+            content: " \25B2\25BC"; /* Thêm mũi tên xuống và mũi tên lên để biểu thị khả năng sắp xếp */
+            font-size: 0.6em;
+        }
     </style>
 </head>
 
@@ -59,12 +70,40 @@ try {
                 <li class="nav-item">
                     <a class="nav-link" href="report.php">Báo cáo Số lượng</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="insert_data.php">Chèn Dữ liệu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="delete_data.php">Xóa Dữ liệu</a>
+                </li>
             </ul>
         </div>
     </nav>
     <div class="container mt-5">
-        <h1 class="text-center">Báo cáo Số lượng Thông tin Chứng chỉ</h1>
+        <h1 class="text-center">Báo cáo Số lượng Thông tin Truy Cập Chứng chỉ</h1>
         <p class="text-center">Tổng số lượng Thông tin Chứng chỉ: <?php echo $total_rows; ?></p>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th class="sortable" onclick="sortTable(0)">Tên sinh viên</th>
+                    <th class="sortable" onclick="sortTable(1)">Email</th>
+                    <th class="sortable" onclick="sortTable(2)">Số điện thoại</th>
+                    <th class="sortable" onclick="sortTable(3)">Số lượng</th>
+                </tr>
+            </thead>
+            <tbody id="infoTable">
+                <?php
+                foreach ($infos as $info) {
+                    echo "<tr>
+                        <td>{$info['student_name']}</td>
+                        <td>{$info['email']}</td>
+                        <td>{$info['phone']}</td>
+                        <td>{$info['count']}</td>
+                    </tr>";
+                }
+                ?>
+            </tbody>
+        </table>
         <div class="footer">
             &copy; <?php echo date("Y"); ?> Báo cáo Số lượng Thông tin Chứng chỉ. All rights reserved.
         </div>
@@ -72,6 +111,44 @@ try {
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("infoTable");
+            switching = true;
+            dir = "asc";
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 0; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+    </script>
 </body>
 
 </html>

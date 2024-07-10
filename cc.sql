@@ -28,6 +28,8 @@ CREATE TABLE information (
     issue_date DATE
 );
 
+
+
 INSERT INTO certificates (certificate_number, full_name, birth_year, gender, training_course, start_date, end_date, issue_date)
 VALUES ('NTU-00001-TT34', 'Nguyễn Văn A', 1990, 'Nam', 'Kỹ năng Công nghệ thông tin', '2024-03-12', '2024-05-05', '2024-07-15');
 -- nhận từ form index
@@ -42,6 +44,7 @@ VALUES ('NTU-00001-TT34', 'Nguyễn Văn A', 1990, 'Nam', 'Kỹ năng Công ngh�
 -- ALTER TABLE email_verification ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
 ALTER TABLE certificates ADD COLUMN email VARCHAR(255) NOT NULL;
+ALTER TABLE information ADD phone VARCHAR(10) NOT NULL;
 
 
 UPDATE `cc`.`certificates` SET `email` = 'ttp6889@gmail.com' WHERE (`id` = '1');

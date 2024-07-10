@@ -111,6 +111,12 @@ try {
                 <li class="nav-item">
                     <a class="nav-link" href="report.php">Báo cáo Số lượng</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="insert_data.php">Chèn Dữ liệu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="delete_data.php">Xóa Dữ liệu</a>
+                </li>
             </ul>
         </div>
     </nav>
